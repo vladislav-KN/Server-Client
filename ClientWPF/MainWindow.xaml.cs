@@ -142,6 +142,7 @@ namespace ClientWPF
                           DispatcherPriority.Background,
                           new Action(() => this.Stage_Lable.Content = "Файл отправлен"));
                         Thread.SpinWait(1000000);
+                        File.Delete("data.txt");
                         FileStream file = new FileStream("data.txt", FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
 
                         int len = 1024 * 5000;

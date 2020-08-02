@@ -10,3 +10,4 @@ C:\Users\SAVS\Documents\GitHub\Server-Client\Server\obj\Release\netcoreapp3.1\Se
 C:\Users\SAVS\Documents\GitHub\Server-Client\Server\obj\Release\netcoreapp3.1\Server.dll
 C:\Users\SAVS\Documents\GitHub\Server-Client\Server\obj\Release\netcoreapp3.1\Server.pdb
 C:\Users\SAVS\Documents\GitHub\Server-Client\Server\obj\Release\netcoreapp3.1\Server.genruntimeconfig.cache
+C:\Users\SAVS\Documents\GitHub\Server-Client\Server\obj\Release\netcoreapp3.1\Server.csprojAssemblyReference.cache

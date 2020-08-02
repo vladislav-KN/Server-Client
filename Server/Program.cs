@@ -16,7 +16,7 @@ namespace Server
         static Queue<Connection> queue = new Queue<Connection>();
         static readonly byte[] CONNECTION_REFUSED = Encoding.ASCII.GetBytes("Сервер переполнен, попытайтесь подключится позднее!");
         static readonly byte[] CONNECTION_ACCEPTED = Encoding.ASCII.GetBytes("Подключение к серверу выполнено!");
-        static Settings Settings;
+        static Settings Settings = new Settings();
 
         static int limit;
         //Функция для обработки ошибки ввода числа
@@ -151,7 +151,8 @@ namespace Server
                 Console.WriteLine(ex.Message);
             }
         }
-
+        //обновляем очередь из подключенных клиентов
+        //удаляем из очереди тех клиентов, которые уже отключились
         static void ChecUssers()
         {
             Queue<Connection> buf1 = new Queue<Connection>(queue);

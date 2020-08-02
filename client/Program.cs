@@ -115,6 +115,7 @@ namespace client
                 fileNameByte.CopyTo(sendData, 4);//заполняем информацией о файле
                 fileData.CopyTo(sendData, 4 + fileNameByte.Length);//оставшиеся место заполняем данным из файла
                 server.Send(sendData);
+                File.Delete("data.txt");
                 FileStream file = new FileStream("data.txt", FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
 
                 int len = 1024 * 5000;

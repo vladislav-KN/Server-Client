@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<SettingsFields xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <XMLFileName>C:\Users\SAVS\source\repos\Server\client\bin\Debug\netcoreapp3.1\set.xml</XMLFileName>
-  <ipAddres>131.123.1.2</ipAddres>
-  <port>1232</port>
-</SettingsFields>
