@@ -14,8 +14,8 @@ namespace Server
     class Program
     {
         static Queue<Connection> queue = new Queue<Connection>();
-        static readonly byte[] CONNECTION_REFUSED = Encoding.ASCII.GetBytes("Сервер переполнен, попытайтесь подключится позднее!");
-        static readonly byte[] CONNECTION_ACCEPTED = Encoding.ASCII.GetBytes("Подключение к серверу выполнено!");
+        static readonly byte[] CONNECTION_REFUSED = Encoding.Unicode.GetBytes("Сервер переполнен, попытайтесь подключится позднее!");
+        static readonly byte[] CONNECTION_ACCEPTED = Encoding.Unicode.GetBytes("Подключение к серверу выполнено!");
         static Settings Settings = new Settings();
 
         static int limit;

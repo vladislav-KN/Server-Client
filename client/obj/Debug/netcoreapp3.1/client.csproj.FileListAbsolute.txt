@@ -11,3 +11,16 @@ C:\Users\SAVS\source\repos\Server\client\obj\Debug\netcoreapp3.1\client.csproj.C
 C:\Users\SAVS\source\repos\Server\client\obj\Debug\netcoreapp3.1\client.dll
 C:\Users\SAVS\source\repos\Server\client\obj\Debug\netcoreapp3.1\client.pdb
 C:\Users\SAVS\source\repos\Server\client\obj\Debug\netcoreapp3.1\client.genruntimeconfig.cache
+C:\Users\SAVS\Documents\GitHub\Server-Client\client\bin\Debug\netcoreapp3.1\client.exe
+C:\Users\SAVS\Documents\GitHub\Server-Client\client\bin\Debug\netcoreapp3.1\client.deps.json
+C:\Users\SAVS\Documents\GitHub\Server-Client\client\bin\Debug\netcoreapp3.1\client.runtimeconfig.json
+C:\Users\SAVS\Documents\GitHub\Server-Client\client\bin\Debug\netcoreapp3.1\client.runtimeconfig.dev.json
+C:\Users\SAVS\Documents\GitHub\Server-Client\client\bin\Debug\netcoreapp3.1\client.dll
+C:\Users\SAVS\Documents\GitHub\Server-Client\client\bin\Debug\netcoreapp3.1\client.pdb
+C:\Users\SAVS\Documents\GitHub\Server-Client\client\obj\Debug\netcoreapp3.1\client.csprojAssemblyReference.cache
+C:\Users\SAVS\Documents\GitHub\Server-Client\client\obj\Debug\netcoreapp3.1\client.AssemblyInfoInputs.cache
+C:\Users\SAVS\Documents\GitHub\Server-Client\client\obj\Debug\netcoreapp3.1\client.AssemblyInfo.cs
+C:\Users\SAVS\Documents\GitHub\Server-Client\client\obj\Debug\netcoreapp3.1\client.csproj.CoreCompileInputs.cache
+C:\Users\SAVS\Documents\GitHub\Server-Client\client\obj\Debug\netcoreapp3.1\client.dll
+C:\Users\SAVS\Documents\GitHub\Server-Client\client\obj\Debug\netcoreapp3.1\client.pdb
+C:\Users\SAVS\Documents\GitHub\Server-Client\client\obj\Debug\netcoreapp3.1\client.genruntimeconfig.cache
