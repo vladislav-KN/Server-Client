@@ -1,0 +1,28 @@
+﻿<Window x:Class="ClientWPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ClientWPF"
+        mc:Ignorable="d"
+        Title="Клиент" Height="267.333" Width="270">
+    <Grid Margin="0,0,0,-1">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="27*"/>
+            <ColumnDefinition Width="104*"/>
+        </Grid.ColumnDefinitions>
+        <Button x:Name="sendFile_Button" Content="Отправить файл" Margin="49,119,49,0" VerticalAlignment="Top" Height="34" Grid.ColumnSpan="2" Click="Button_Click_1"/>
+        <Button x:Name="chouseFile_Button" Content="Выбрать файл" Margin="49,76,49,0" VerticalAlignment="Top" Height="34" Click="Button_Click" Grid.ColumnSpan="2"/>
+        <Button x:Name="openFile_Button" Content="Открыть полученный файл" Margin="49,161,49,0" VerticalAlignment="Top" Height="34" IsEnabled="False" Grid.ColumnSpan="2" Click="openFile_Button_Click"/>
+        <Label Content="Путь до файла:" Margin="3,31,157,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+        <Label x:Name="Lable1" Content="" Margin="57,32,3,0" VerticalAlignment="Top" MouseDoubleClick="Label_MouseDoubleClick" MouseEnter="Label_MouseEnter" MouseLeave="Lable1_MouseLeave" Grid.Column="1" FontSize="10"/>
+        <Menu Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="18" Margin="1,0,-1,0" VerticalAlignment="Top" Width="262">
+            <MenuItem Header="Настройки">
+                <MenuItem Header="Изменить адрес сервер и порт" Click="MenuItem_Click" ></MenuItem>
+            </MenuItem>
+        </Menu>
+        <Label x:Name="Stage_Lable" Content="" Margin="26,200,80,0" VerticalAlignment="Top" Grid.Column="1"/>
+
+
+    </Grid>
+</Window>
