@@ -13,7 +13,7 @@ namespace Server
 {
     class Program
     {
-        static Queue<Connection> queue = new Queue<Connection>();
+        static List<Connection> connection = new List<Connection>();
         static readonly byte[] CONNECTION_REFUSED = Encoding.Unicode.GetBytes("Сервер переполнен, попытайтесь подключится позднее!");
         static readonly byte[] CONNECTION_ACCEPTED = Encoding.Unicode.GetBytes("Подключение к серверу выполнено!");
         static Settings Settings = new Settings();
@@ -113,17 +113,17 @@ namespace Server
                         new Thread(delegate ()
                         {
                             //проверяем количество клиентов в очереди
-                            if (queue.Count <= limit)
+                            if (connection.Count <= limit)
                             {
                                 //отправляем информацию об успешном подключении
                                 client.Send(CONNECTION_ACCEPTED);
-                                queue.Enqueue(new Connection(client, counter));//добавляем клиента в очередь
-                                while (queue.Any())
+                                connection.Add(new Connection(client, counter));//добавляем клиента в очередь
+                                int i = connection.Count - 1;
+                                while (connection.Any())
                                 {
-                                    queue.Peek().RequestFileHandler();//выполняем 
-                                    var connection = queue.Dequeue();//достаем из очереди 
-                                    if (!connection.Finished)// если до сих пор подключён возвращаем в очередь
-                                        queue.Enqueue(connection);
+                                    Program.connection[i].RequestFileHandler();//выполняем 
+                                    ChecUssers();
+                                    break;
                                 }
                             }
                             else
@@ -133,12 +133,12 @@ namespace Server
                                 //разрываем связь
                                 new Connection(client, counter).Abort();
                             }
-
+                           
                         }).Start();
                     }catch (Exception ex)
                     {
                         Console.WriteLine(ex.Message);
-                        foreach(Connection connection in queue)
+                        foreach(Connection connection in connection)
                         {
                             Console.WriteLine(((IPEndPoint)client.RemoteEndPoint).Address.ToString());
                         }
@@ -155,18 +155,16 @@ namespace Server
         //удаляем из очереди тех клиентов, которые уже отключились
         static void ChecUssers()
         {
-            Queue<Connection> buf1 = new Queue<Connection>(queue);
-            Queue<Connection> buf2 = new Queue<Connection>();
-            while (buf1.Count > 0)
+            List<Connection> buf1 = new List<Connection>(connection);
+            for(int i = 0; i < buf1.Count; i++)
             {
-                Connection ClientInfo = buf1.Dequeue();
-                if (ClientInfo.Client.Connected)
+                if (buf1[i].Client.Connected)
                 {
-                    buf2.Enqueue(ClientInfo);
+                    buf1.Remove(buf1[i]);
                 }
             }
-            List<Connection> buf3 = buf2.Distinct().ToList<Connection>();
-            queue = new Queue<Connection>(buf3);
+            
+            connection = new List<Connection>(buf1.Distinct());
         }
     }
 }

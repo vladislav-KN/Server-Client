@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30320.27
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "client", "client\client.csproj", "{4245131A-FA9C-4E78-838A-1ACEFA428950}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientWPF", "ClientWPF\ClientWPF.csproj", "{D65FBED6-67E3-4308-9886-248BDBBD06B1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "Server\Server.csproj", "{6F4828E0-9692-4E39-A168-85DBD90154E3}"
@@ -15,10 +13,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4245131A-FA9C-4E78-838A-1ACEFA428950}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4245131A-FA9C-4E78-838A-1ACEFA428950}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4245131A-FA9C-4E78-838A-1ACEFA428950}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4245131A-FA9C-4E78-838A-1ACEFA428950}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D65FBED6-67E3-4308-9886-248BDBBD06B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D65FBED6-67E3-4308-9886-248BDBBD06B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D65FBED6-67E3-4308-9886-248BDBBD06B1}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SettingsFields xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <XMLFileName>C:\Users\SAVS\Documents\GitHub\Server-Client\ClientWPF\bin\Release\set.xml</XMLFileName>
+  <ipAddres>192.168.23.100</ipAddres>
+  <port>1080</port>
+</SettingsFields>

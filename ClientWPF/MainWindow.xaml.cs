@@ -29,6 +29,8 @@ namespace ClientWPF
         string fileName;
         static Settings Settings;
         static string newFileName;
+        Socket server;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -102,14 +104,15 @@ namespace ClientWPF
         {
             if (File.Exists(fileName))
             {
+                IPEndPoint ipPoint = new IPEndPoint(IPAddress.Parse(Settings.Fields.ipAddres), Settings.Fields.port);
+                // создаем сокет
+                server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                server.Connect(ipPoint);
                 Task.Run(async () =>
                 {
                     long fileSize;
                     // получаем адреса для запуска сокета
-                    IPEndPoint ipPoint = new IPEndPoint(IPAddress.Parse(Settings.Fields.ipAddres), Settings.Fields.port);
-                    // создаем сокет
-                    Socket server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                    server.Connect(ipPoint);
+                    
                     byte[] data = new byte[256]; // буфер для ответа
                     StringBuilder builder = new StringBuilder();
                     int bytes = 0; // количество полученных байт
@@ -160,8 +163,7 @@ namespace ClientWPF
                         Application.Current.Dispatcher.BeginInvoke(
                           DispatcherPriority.Background,
                           new Action(() => this.Stage_Lable.Content = "Файл получен"));
-                        server.Shutdown(SocketShutdown.Both);
-                        server.Close();
+                        
                         Thread.SpinWait(1000000);
                         Application.Current.Dispatcher.BeginInvoke(
                           DispatcherPriority.Background,
@@ -191,6 +193,18 @@ namespace ClientWPF
                 Settings.WriteXml();
             }
             
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            if (server!=null)
+            {
+                if (server.Connected) 
+                {
+                    server.Shutdown(SocketShutdown.Both);
+                    server.Close(); 
+                }
+            }
         }
     }
 }
