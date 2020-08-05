@@ -30,7 +30,8 @@ namespace ClientWPF
         static Settings Settings;
         static string newFileName;
         Socket server;
-
+        Queue<string> fileQueue = new Queue<string>();
+        Queue<string> newFileQueue = new Queue<string>();
         public MainWindow()
         {
             InitializeComponent();
@@ -79,8 +80,11 @@ namespace ClientWPF
             {
                 // Open document
                 fileName = dlg.FileName;
-                Lable1.Content = fileName;
+                Lable1.Content += System.IO.Path.GetFileName(fileName) + " ";
+                fileQueue.Enqueue(fileName);
+                chouseFile_Button.Content = "Добавить файл";
             }
+
             
         }
         // при 2-ном нажатии на label выполняется обработка нажатия на кнопку "Выбрать файл"
@@ -102,14 +106,36 @@ namespace ClientWPF
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            if (File.Exists(fileName))
+            if (fileQueue.Count>0)
             {
+                sendFile_Button.IsEnabled = false;
                 IPEndPoint ipPoint = new IPEndPoint(IPAddress.Parse(Settings.Fields.ipAddres), Settings.Fields.port);
                 // создаем сокет
                 server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                server.Connect(ipPoint);
+                try
+                {
+                    if (server != null)
+                    {
+                        if (server.Connected);
+                        else
+                        {
+                            server.Connect(ipPoint);
+                        }
+                    }
+                    else
+                    {
+
+                        server.Connect(ipPoint);
+                    }
+                }
+                catch
+                {
+                    MessageBox.Show("Сервер недоступен", "Ошибка подключения к серверу", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                }
+                
                 Task.Run(async () =>
                 {
+                    
                     long fileSize;
                     // получаем адреса для запуска сокета
                     
@@ -132,42 +158,90 @@ namespace ClientWPF
                     }
                     else
                     {
-                        //обрабатываем 
-                        byte[] fileNameByte = Encoding.ASCII.GetBytes(fileName);//преобразуем имя файла в байты
-                        byte[] fileNameBLen = BitConverter.GetBytes(fileName.Length); //Преобразуем длину имени файла в байты
-                        byte[] fileData = File.ReadAllBytes(fileName);//преобразуем файл в байты
-                        byte[] sendData = new byte[4 + fileNameByte.Length + fileData.Length];//выделяем место для отправки всей информации
-                        fileNameBLen.CopyTo(sendData, 0);//первые 4 байта занимаем под информацию о длине файла
-                        fileNameByte.CopyTo(sendData, 4);//заполняем информацией о файле
-                        fileData.CopyTo(sendData, 4 + fileNameByte.Length);//оставшиеся место заполняем данным из файла
-                        server.Send(sendData);
-                        Application.Current.Dispatcher.BeginInvoke(
-                          DispatcherPriority.Background,
-                          new Action(() => this.Stage_Lable.Content = "Файл отправлен"));
-                        Thread.SpinWait(1000000);
-                        newFileName = System.IO.Path.GetDirectoryName(fileName) + "\\New_" + System.IO.Path.GetFileName(fileName);
-                        FileStream file = new FileStream(newFileName, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
-
-                        int len = 1024 * 5000;
-                        var buffer = new byte[len];
-                        int bytesRead;
-                        //получаем файл обратно
-                        Application.Current.Dispatcher.BeginInvoke(
-                          DispatcherPriority.Background,
-                          new Action(() => this.Stage_Lable.Content = "Получаем файл"));
-                        while ((bytesRead = server.Receive(buffer, 0, buffer.Length, SocketFlags.None)) > 0)
+                        int fileNum = 1;
+                        while (fileQueue.Any())
                         {
-                            file.Write(buffer, 0, bytesRead);
+
+                            string fileName = fileQueue.Dequeue();
+                            try
+                            {
+                                
+                                //обрабатываем 
+                                byte[] fileNameByte = Encoding.ASCII.GetBytes(fileName);//преобразуем имя файла в байты
+                                byte[] fileNameBLen = BitConverter.GetBytes(fileName.Length); //Преобразуем длину имени файла в байты
+                                byte[] fileData = File.ReadAllBytes(fileName);//преобразуем файл в байты
+                                byte[] sendData = new byte[4 + fileNameByte.Length + fileData.Length];//выделяем место для отправки всей информации
+                                fileNameBLen.CopyTo(sendData, 0);//первые 4 байта занимаем под информацию о длине файла
+                                fileNameByte.CopyTo(sendData, 4);//заполняем информацией о файле
+                                fileData.CopyTo(sendData, 4 + fileNameByte.Length);//оставшиеся место заполняем данным из файла
+                                server.Send(sendData);
+                                Application.Current.Dispatcher.BeginInvoke(
+                                  DispatcherPriority.Background,
+                                  new Action(() => this.Stage_Lable.Content = "Файл отправлен"));
+                                Thread.SpinWait(1000000);
+                                newFileName = System.IO.Path.GetDirectoryName(fileName) + "\\New_" +fileNum+ System.IO.Path.GetFileName(fileName);
+                                FileStream file = new FileStream(newFileName, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
+                                newFileQueue.Enqueue(newFileName);
+                                fileNum++;
+                                int len = 1024 * 5000;
+                                var buffer = new byte[len];
+                                int bytesRead;
+                                //получаем файл обратно
+                                Application.Current.Dispatcher.BeginInvoke(
+                                  DispatcherPriority.Background,
+                                  new Action(() => this.Stage_Lable.Content = "Получаем файл"));
+                                while ((bytesRead = server.Receive(buffer, 0, buffer.Length, SocketFlags.None)) > 0)
+                                {
+                                    file.Write(buffer, 0, bytesRead);
+                                }
+                                file.Close();
+                                Application.Current.Dispatcher.BeginInvoke(
+                                  DispatcherPriority.Background,
+                                  new Action(() => this.Stage_Lable.Content = "Файл получен"));
+
+                                Thread.SpinWait(1000000);
+                                Application.Current.Dispatcher.BeginInvoke(
+                                  DispatcherPriority.Background,
+                                  new Action(() => this.openFile_Button.IsEnabled = true));
+                                data = new byte[256]; // буфер для ответа
+                                builder = new StringBuilder();
+                                bytes = 0; // количество полученных байт
+                                           //получаем сообщение о возможности подключения
+                                do
+                                {
+                                    bytes = server.Receive(data, data.Length, 0);
+                                    builder.Append(Encoding.Unicode.GetString(data, 0, bytes));
+                                }
+                                while (server.Available > 0);
+
+                                if (builder.ToString() == "Next")
+                                {
+                                    continue;
+                                }
+                                else
+                                {
+                                    break;
+                                }
+                                
+                            }
+                            catch
+                            {
+                                MessageBox.Show("Файл не доступен для отправки", "Ошибка отправки файла", MessageBoxButton.OK, MessageBoxImage.Error);
+                                server.Shutdown(SocketShutdown.Both);
+                                server.Close();
+                                break;
+                            }
                         }
-                        file.Close();
                         Application.Current.Dispatcher.BeginInvoke(
-                          DispatcherPriority.Background,
-                          new Action(() => this.Stage_Lable.Content = "Файл получен"));
+                              DispatcherPriority.Background,
+                              new Action(() => this.sendFile_Button.IsEnabled = true));
+                        Application.Current.Dispatcher.BeginInvoke(
+                              DispatcherPriority.Background,
+                              new Action(() => this.sendFile_Button.IsEnabled = true));
+                        Application.Current.Dispatcher.BeginInvoke(
+                              DispatcherPriority.Background,
+                              new Action(() => chouseFile_Button.Content = "Добавить файл"));
                         
-                        Thread.SpinWait(1000000);
-                        Application.Current.Dispatcher.BeginInvoke(
-                          DispatcherPriority.Background,
-                          new Action(() => this.openFile_Button.IsEnabled = true));
                     }
 
                 });
@@ -177,7 +251,11 @@ namespace ClientWPF
         //обработчик нажатия на кнопку "Открыть файл"
         private void openFile_Button_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start(newFileName);
+            foreach(string file in newFileQueue)
+            {
+                System.Diagnostics.Process.Start(file);
+            }
+            
         }
         //обработчик нажатия на кнопку меню
         private void MenuItem_Click(object sender, RoutedEventArgs e)

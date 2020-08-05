@@ -8,12 +8,13 @@ using System.Threading;
 using System.IO;
 using Microsoft.VisualBasic.FileIO;
 using System.Collections.Generic;
+using System.Collections;
 
 namespace Server
 {
     class Program
     {
-        static List<Connection> connection = new List<Connection>();
+        static Queue<Connection> connection = new Queue<Connection>();
         static readonly byte[] CONNECTION_REFUSED = Encoding.Unicode.GetBytes("Сервер переполнен, попытайтесь подключится позднее!");
         static readonly byte[] CONNECTION_ACCEPTED = Encoding.Unicode.GetBytes("Подключение к серверу выполнено!");
         static Settings Settings = new Settings();
@@ -117,13 +118,15 @@ namespace Server
                             {
                                 //отправляем информацию об успешном подключении
                                 client.Send(CONNECTION_ACCEPTED);
-                                connection.Add(new Connection(client, counter));//добавляем клиента в очередь
-                                int i = connection.Count - 1;
+                                connection.Enqueue(new Connection(client, counter));//добавляем клиента в очередь
+
                                 while (connection.Any())
                                 {
-                                    Program.connection[i].RequestFileHandler();//выполняем 
+                                    connection.Peek().RequestFileHandler();//выполняем 
+                                    var client = connection.Dequeue();
+                                    if (!client.Finished)
+                                        connection.Enqueue(client);
                                     ChecUssers();
-                                    break;
                                 }
                             }
                             else
@@ -156,15 +159,14 @@ namespace Server
         static void ChecUssers()
         {
             List<Connection> buf1 = new List<Connection>(connection);
-            for(int i = 0; i < buf1.Count; i++)
+            for (int i = 0; i < buf1.Count; i++)
             {
                 if (buf1[i].Client.Connected)
                 {
                     buf1.Remove(buf1[i]);
                 }
             }
-            
-            connection = new List<Connection>(buf1.Distinct());
+            connection = new Queue<Connection>(buf1.Distinct());
         }
     }
 }
